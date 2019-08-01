@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using api.Models;
+using api.Services;
+using api.Services.impl;
 
 namespace api
 {
@@ -21,12 +23,15 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<NewsSourceContext>(opt => opt.UseInMemoryDatabase("NewsSource"));
+            services.AddScoped<INewsSourceService, NewsSourceService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            InitData(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -39,6 +44,18 @@ namespace api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private void InitData(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                var newsSourcesService = services.GetService<INewsSourceService>();
+
+                newsSourcesService.initNewsSources();
+            }
+
         }
     }
 }

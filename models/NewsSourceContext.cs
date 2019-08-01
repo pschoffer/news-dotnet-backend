@@ -8,12 +8,5 @@ namespace api.Models
 
         public DbSet<NewsSource> NewsSources { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<NewsSource>().HasData(
-                new NewsSource("test", "test", "google.com", "desc"),
-                new NewsSource("test2", "test2", "google2.com", "desc2")
-            );
-        }
     }
 }
