@@ -23,6 +23,7 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<NewsSourceContext>(opt => opt.UseInMemoryDatabase("NewsSource"));
+            services.AddDbContext<NewsItemContext>(opt => opt.UseInMemoryDatabase("News"));
             services.AddScoped<INewsSourceService, NewsSourceService>();
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
