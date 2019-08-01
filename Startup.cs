@@ -24,6 +24,7 @@ namespace api
         {
             services.AddDbContext<NewsSourceContext>(opt => opt.UseInMemoryDatabase("NewsSource"));
             services.AddScoped<INewsSourceService, NewsSourceService>();
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -42,6 +43,7 @@ namespace api
                 app.UseHsts();
             }
 
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyOrigin());
             app.UseHttpsRedirection();
             app.UseMvc();
         }
