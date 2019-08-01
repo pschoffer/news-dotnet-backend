@@ -1,6 +1,9 @@
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using api.Models;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using System;
 
 namespace api.Services.impl
@@ -11,33 +14,43 @@ namespace api.Services.impl
 
         private readonly ILogger _logger;
         private readonly NewsSourceContext _sourceContext;
-        private readonly NewsItemContext _newsContext;
+        private readonly IServiceProvider _serviceProvider;
         private readonly INewsProducerFactory _producerFactory;
 
+
         public NewsService(NewsSourceContext sourceContext,
-                            NewsItemContext newsContext,
+                            IServiceProvider serviceProvider,
                             ILogger<NewsService> logger,
                             INewsProducerFactory producerFactory)
         {
             _sourceContext = sourceContext;
-            _newsContext = newsContext;
+            _serviceProvider = serviceProvider;
             _logger = logger;
             _producerFactory = producerFactory;
         }
 
-        public void LoadNews()
+        public async Task LoadNews()
         {
             _logger.LogInformation("Loading News.");
 
             var sources = _sourceContext.NewsSources;
+            List<Task> tasks = new List<Task>();
             foreach (var source in sources)
             {
                 var producer = _producerFactory.create(source);
-                var news = producer.produceNews();
-
-                _newsContext.AddRange(news);
+                tasks.Add(populateNews(producer));
             }
-            _newsContext.SaveChanges();
+
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task populateNews(INewsProducer producer)
+        {
+            var news = await producer.produceNews();
+
+            var context = _serviceProvider.GetRequiredService<NewsItemContext>();
+            context.AddRange(news);
+            context.SaveChanges();
         }
     }
 }

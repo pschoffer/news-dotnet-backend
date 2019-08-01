@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace api.Services
 {
     public interface INewsService
     {
-        void LoadNews();
+        Task LoadNews();
     }
 }

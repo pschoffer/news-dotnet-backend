@@ -1,9 +1,10 @@
 using api.Models;
+using System.Threading.Tasks;
 
 namespace api.Services
 {
     public interface INewsProducer
     {
-        NewsItem[] produceNews();
+        Task<NewsItem[]> produceNews();
     }
 }

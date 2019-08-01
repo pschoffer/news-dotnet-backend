@@ -1,6 +1,9 @@
 using Microsoft.Extensions.Logging;
 using api.Models;
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 
 namespace api.Services.impl
 {
@@ -11,15 +14,29 @@ namespace api.Services.impl
         private readonly ILogger _logger;
         private readonly NewsSource _source;
 
-        public NewsProducer(NewsSource newsSource, ILogger<NewsProducer> logger)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public NewsProducer(NewsSource newsSource, ILogger<NewsProducer> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _source = newsSource;
+            _httpClientFactory = httpClientFactory;
         }
 
-        public NewsItem[] produceNews()
+
+        private async Task<string> fetchDataFromSource()
+        {
+            _logger.LogInformation("[{}] Fetching data", _source.Id);
+
+            var httpClient = _httpClientFactory.CreateClient();
+            return await httpClient.GetStringAsync(_source.NewsUrl);
+        }
+        public async Task<NewsItem[]> produceNews()
         {
             _logger.LogInformation("[{}] Starting to produce news", _source.Id);
+
+            string rawInput = await fetchDataFromSource();
+
             return new NewsItem[] {
                 new NewsItem(_source.Id + "id",
                 "title",

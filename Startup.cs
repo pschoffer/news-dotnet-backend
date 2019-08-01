@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using api.Models;
 using api.Services;
 using api.Services.impl;
+using System;
 
 namespace api
 {
@@ -22,8 +23,9 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddDbContext<NewsSourceContext>(opt => opt.UseInMemoryDatabase("NewsSource"));
-            services.AddDbContext<NewsItemContext>(opt => opt.UseInMemoryDatabase("News"));
+            services.AddDbContext<NewsItemContext>(opt => opt.UseInMemoryDatabase("News"), ServiceLifetime.Transient);
             services.AddScoped<INewsSourceService, NewsSourceService>();
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<INewsProducerFactory, NewsProducerFactory>();
@@ -51,7 +53,7 @@ namespace api
             app.UseMvc();
         }
 
-        private void InitData(IApplicationBuilder app)
+        private async void InitData(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
@@ -61,7 +63,7 @@ namespace api
                 newsSourcesService.initNewsSources();
 
                 var newsService = services.GetService<INewsService>();
-                newsService.LoadNews();
+                await newsService.LoadNews();
             }
 
         }
