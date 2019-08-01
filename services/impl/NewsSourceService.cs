@@ -21,8 +21,9 @@ namespace api.Services.impl
         {
             _logger.LogInformation("Initializing News Sources to hard codded data.");
 
-            _context.Add(new NewsSource("test", "test", "google.com", "desc"));
-            _context.Add(new NewsSource("test2", "test2", "google2.com", "desc2"));
+            _context.Add(new NewsSource("nt", "Norrköpingsnyheter", "https://www.nt.se/nyheter/norrkoping/rss/", "De senaste Norrköpingsnyheterna från nt.se"));
+            _context.Add(new NewsSource("expressen", "Expressen: Nyheter", "https://feeds.expressen.se/nyheter/", "Sveriges bästa nyhetssajt med nyheter, sport och nöje!"));
+            _context.Add(new NewsSource("svd", "SvD - Startsidan", "https://www.svd.se/?service=rss", "Startsidan från www.svd.se"));
             _context.SaveChanges();
         }
     }
