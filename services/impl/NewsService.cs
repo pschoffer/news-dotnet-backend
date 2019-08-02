@@ -6,6 +6,7 @@ using api.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace api.Services.impl
 {
@@ -60,7 +61,10 @@ namespace api.Services.impl
         {
             var context = _serviceProvider.GetRequiredService<NewsItemContext>();
 
-            var list = await context.NewsItems.ToListAsync();
+
+            var list = await context.NewsItems
+            .OrderByDescending(item => item.Date)
+            .ToListAsync();
 
             return list.ToArray();
         }
