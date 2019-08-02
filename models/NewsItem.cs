@@ -5,6 +5,10 @@ namespace api.Models
     public class NewsItem
     {
 
+        public NewsItem(string id)
+        {
+            Id = id;
+        }
         public NewsItem(string id, string title, string description, string link, string sourceId, DateTime date, string imageUrl, string category)
         {
             Id = id;
