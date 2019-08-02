@@ -1,4 +1,4 @@
-# News-dotnet-backend
+# News Dotnet Backend
 
 News aggregator service that consumes xml data streams and provide set of Rest endpoints to get the data from.
 
