@@ -4,19 +4,19 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using api.Models;
-
+using api.Services;
 namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class NewsController : ControllerBase
     {
-        private readonly NewsItemContext _context;
+        private readonly INewsService _service;
         private readonly ILogger _logger;
 
-        public NewsController(NewsItemContext context, ILogger<NewsController> logger)
+        public NewsController(INewsService service, ILogger<NewsController> logger)
         {
-            _context = context;
+            _service = service;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace api.Controllers
         public async Task<ActionResult<IEnumerable<NewsItem>>> GetNewsItems()
         {
             _logger.LogInformation("Getting all the news");
-            return await _context.NewsItems.ToListAsync();
+            return await _service.getAllNews();
         }
 
     }

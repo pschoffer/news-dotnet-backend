@@ -1,6 +1,7 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using api.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -51,6 +52,22 @@ namespace api.Services.impl
             var context = _serviceProvider.GetRequiredService<NewsItemContext>();
             context.AddRange(news);
             context.SaveChanges();
+        }
+
+
+
+        public async Task<NewsItem[]> getAllNews()
+        {
+            var context = _serviceProvider.GetRequiredService<NewsItemContext>();
+
+            var list = await context.NewsItems.ToListAsync();
+
+            return list.ToArray();
+        }
+
+        public Task<NewsItem[]> getNews(string sourceId)
+        {
+            return null;
         }
     }
 }
