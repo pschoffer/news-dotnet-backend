@@ -69,9 +69,17 @@ namespace api.Services.impl
             return list.ToArray();
         }
 
-        public Task<NewsItem[]> getNews(string sourceId)
+        public async Task<NewsItem[]> getNews(string sourceId)
         {
-            return null;
+            var context = _serviceProvider.GetRequiredService<NewsItemContext>();
+
+
+            var list = await context.NewsItems
+            .Where(item => item.SourceId == sourceId)
+            .OrderByDescending(item => item.Date)
+            .ToListAsync();
+
+            return list.ToArray();
         }
     }
 }
