@@ -24,6 +24,10 @@ This is a sceleton application just to show some basic approaches. Following is 
 
 - Testing!
 
+- Error handling. I just written code for happy path, but what if the sources are down or change the endpoints and so on.
+
+- Splitting the "load data" and "serve API" logic to separate microservices so that they can be scaled up and down as needed
+
 ## Run
 
 To run the server on linux machine you can run following command that will start a server on [localhost:5000](http://localhost:5000)
